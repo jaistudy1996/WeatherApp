@@ -15,6 +15,8 @@
 		3B7EBC51202E3AB7001DCEFF /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7EBC50202E3AB7001DCEFF /* CoreDataManager.swift */; };
 		3B7EBC57202E3F59001DCEFF /* Weather.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3B7EBC55202E3F59001DCEFF /* Weather.xcdatamodeld */; };
 		3B7EBC592031C98D001DCEFF /* UnitSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7EBC582031C98D001DCEFF /* UnitSelectorController.swift */; };
+		3B7EBC5B2031E2D4001DCEFF /* WeatherInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7EBC5A2031E2D4001DCEFF /* WeatherInfoController.swift */; };
+		3BC853662031FC37007A5AE4 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC853652031FC37007A5AE4 /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		3B7EBC50202E3AB7001DCEFF /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		3B7EBC56202E3F59001DCEFF /* Weather.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Weather.xcdatamodel; sourceTree = "<group>"; };
 		3B7EBC582031C98D001DCEFF /* UnitSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitSelectorController.swift; sourceTree = "<group>"; };
+		3B7EBC5A2031E2D4001DCEFF /* WeatherInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherInfoController.swift; sourceTree = "<group>"; };
+		3BC853652031FC37007A5AE4 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				3B7EBC3D202E3A4F001DCEFF /* AppDelegate.swift */,
 				3B7EBC582031C98D001DCEFF /* UnitSelectorController.swift */,
 				3B7EBC3F202E3A4F001DCEFF /* ViewController.swift */,
+				3BC853652031FC37007A5AE4 /* SearchViewController.swift */,
+				3B7EBC5A2031E2D4001DCEFF /* WeatherInfoController.swift */,
 				3B7EBC41202E3A4F001DCEFF /* Main.storyboard */,
 				3B7EBC46202E3A4F001DCEFF /* LaunchScreen.storyboard */,
 				3B7EBC4F202E3A90001DCEFF /* CoreData */,
@@ -154,9 +160,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B7EBC57202E3F59001DCEFF /* Weather.xcdatamodeld in Sources */,
+				3BC853662031FC37007A5AE4 /* SearchViewController.swift in Sources */,
 				3B7EBC51202E3AB7001DCEFF /* CoreDataManager.swift in Sources */,
 				3B7EBC592031C98D001DCEFF /* UnitSelectorController.swift in Sources */,
 				3B7EBC40202E3A4F001DCEFF /* ViewController.swift in Sources */,
+				3B7EBC5B2031E2D4001DCEFF /* WeatherInfoController.swift in Sources */,
 				3B7EBC3E202E3A4F001DCEFF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
