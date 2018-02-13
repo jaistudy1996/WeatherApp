@@ -9,35 +9,27 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
-class SearchView: UIViewController, UISearchBarDelegate, MKLocalSearchCompleterDelegate {
+class SearchView: UIViewController {
     
     // MARK: - Default properties
     // TODO: - UPDATE LOC FROM CORELOCATION
-    private static var currentLoc = "TEST"
+    private var currentLoc = "TEST"
     
-    // MARK: - Default location servies
-    class func getCurrentLoc() -> String {
-        return currentLoc
-    }
-    
-    
-    @IBAction func closeSearch(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "placeSelected", sender: self)
-    }
+    let cdManager = CoreDataManager.shared
     
     // MARK: -  Search Bar
     
     @IBOutlet weak var search: UISearchBar!
     
+    @IBAction func closeSearch(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: "placeSelected", sender: self)
+    }
+    
     override func viewDidLoad() {
         search.delegate = self
         searchCompleter.delegate = self
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-        searchCompleter.queryFragment = searchText
     }
     
     // MARK: - MapKit
@@ -45,6 +37,24 @@ class SearchView: UIViewController, UISearchBarDelegate, MKLocalSearchCompleterD
     var searchCompleter = MKLocalSearchCompleter()
     var searchResults = [MKLocalSearchCompletion]()
     
+    
+    // MARK: - Table View
+
+    @IBOutlet weak var searchResultsViewer: UITableView!
+    
+}
+
+extension SearchView {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "placeSelected" {
+            print("SEGUE: placeSelected.    TYPE: prepare")
+            let destVC = segue.destination as! ViewController
+            destVC.currentLoc = currentLoc
+        }
+    }
+}
+
+extension SearchView: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         searchResults = completer.results
         searchResultsViewer.reloadData()
@@ -54,11 +64,13 @@ class SearchView: UIViewController, UISearchBarDelegate, MKLocalSearchCompleterD
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         print(error)
     }
-    
-    // MARK: - Table View
+}
 
-    @IBOutlet weak var searchResultsViewer: UITableView!
-    
+extension SearchView: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
+        searchCompleter.queryFragment = searchText
+    }
 }
 
 extension SearchView: UITableViewDelegate {
@@ -72,11 +84,39 @@ extension SearchView: UITableViewDelegate {
         let search = MKLocalSearch(request: searchRequest)
         search.start { (response, error) in
             //let coordinate = response?.mapItems[0].placemark.coordinate
-            SearchView.currentLoc = (response?.mapItems[0].name)!
-            print(response?.mapItems[0].name)
+            
+            print("========== currentLOC Test =======")
+            
+            print("Before: \(self.currentLoc)")
+            self.currentLoc = (response?.mapItems[0].name)!
+            print("After: \(self.currentLoc)")
+            
+            print("========== currentLOC Test End =======")
+            
+            print(response?.mapItems[0].placemark.coordinate.latitude)
+            print(response?.mapItems[0].placemark.coordinate.longitude)
+            
+            // Entity information
+            let name = response?.mapItems[0].name
+            let longitude = response?.mapItems[0].placemark.coordinate.longitude
+            let latitude = response?.mapItems[0].placemark.coordinate.latitude
+            
+            // Selected Place entity
+            let locEntity = NSEntityDescription.entity(forEntityName: "Places", in: self.cdManager.managedObjectContext)
+            let locObject = NSManagedObject(entity: locEntity!, insertInto: self.cdManager.managedObjectContext)
+            locObject.setValue(name, forKey: "name")
+            locObject.setValue(longitude, forKey: "longitude")
+            locObject.setValue(latitude, forKey: "latitude")
+            
+            self.cdManager.saveData()
+            self.performSegue(withIdentifier: "placeSelected", sender: self)
         }
-        ViewController.updateLoc(to: SearchView.currentLoc)
-        performSegue(withIdentifier: "placeSelected", sender: self)
+        
+        //ViewController.updateLoc(to: SearchView.currentLoc)
+        
+        // Add selected Place to Place Entity
+        
+        
     }
 }
 

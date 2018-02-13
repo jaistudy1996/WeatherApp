@@ -16,24 +16,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     // TESTING
     
-    private static var currentLoc: String?
-    private static let cdManager = CoreDataManager(modelName: "Weather")
-    
-    class func getCDManager() -> CoreDataManager{
-        return cdManager
-    }
-    
-    class func updateLoc(to newLoc: String) {
-        ViewController.currentLoc = newLoc
-        
-    }
+    var currentLoc: String?
+    let cdManager = CoreDataManager.shared
     
     @IBOutlet weak var location: UITextField!
     @IBOutlet weak var name: UITextField!
     @IBOutlet weak var units: UITextField!
     var unitTextField = UnitSelector.currentUnit()
-    var locationTextField = SearchView.getCurrentLoc()
-
     
     @IBAction func goToSearchViewController(_ sender: UITextField) {
         performSegue(withIdentifier: "searchForPlaces", sender: self)
@@ -41,10 +30,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func updateUnitTextField() {
         unitTextField = UnitSelector.currentUnit()
-    }
-    
-    func updateLocationField() {
-        locationTextField = SearchView.getCurrentLoc()
     }
     
     @IBAction func selectUnits(_ sender: UITextField) {
@@ -57,9 +42,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         units.text = unitTextField
-        updateLocationField()
-        location.text = locationTextField
-        
+        location.text = currentLoc
         
         // TEST
         
@@ -102,11 +85,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        updateLocationField()
-        super.viewDidAppear(true)
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -115,12 +93,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func saveUserInfo(_ sender: UIButton) {
         print("\(name.text ?? "") and \(units.text ?? "")")
-        let userEntity = NSEntityDescription.entity(forEntityName: "User", in: ViewController.cdManager.managedObjectContext)
-        let user = NSManagedObject(entity: userEntity!, insertInto: ViewController.cdManager.managedObjectContext)
+        let userEntity = NSEntityDescription.entity(forEntityName: "User", in: cdManager.managedObjectContext)
+        let user = NSManagedObject(entity: userEntity!, insertInto: cdManager.managedObjectContext)
         user.setValue(name.text, forKey: "firstName")
         user.setValue(unitTextField, forKey: "defaultUnits")
-        print(ViewController.cdManager.managedObjectContext)
-        ViewController.cdManager.saveData()
+        print(cdManager.managedObjectContext)
+        cdManager.saveData()
         print("data saved")
         performSegue(withIdentifier: "weatherFromSettings", sender: self)
     }

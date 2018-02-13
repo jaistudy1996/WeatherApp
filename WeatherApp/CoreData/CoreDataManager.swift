@@ -13,12 +13,15 @@ import CoreData
 
 class CoreDataManager {
     
+    // MARK: - Shared instance
+    static let shared = CoreDataManager(modelName: "Weather")
+    
     // MARK: - Properties
     private let modelName: String
     
     // MARK: - Initializer
     
-    init(modelName: String) {
+    private init(modelName: String) {
         self.modelName = modelName
     }
     
@@ -56,6 +59,13 @@ class CoreDataManager {
         }
         return persistentStoreCoordinator
     }()
+    
+    // create entity
+    func createEntity(for entityName: String, in managedContext: NSManagedObjectContext) -> NSEntityDescription?{
+        return NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
+    }
+    
+    // add entity to managed context
     
     // save data call to persistent store coordinator
     func saveData() {

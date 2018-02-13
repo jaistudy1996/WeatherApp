@@ -12,10 +12,13 @@ import CoreData
 
 class WeatherInfoController: UIViewController {
     
-    let cdManager = ViewController.getCDManager()
+    let cdManager = CoreDataManager.shared
     
     @IBOutlet weak var testText: UITextView!
     
+    @IBAction func settingsButton(_ sender: UIButton) {
+        goToSettings()
+    }
     func goToSettings() {
         performSegue(withIdentifier: "checkUser", sender: self)
     }
