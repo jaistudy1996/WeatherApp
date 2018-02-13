@@ -16,7 +16,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     // TESTING
     
-    var currentLoc: String?
+    var currentLocName:  String?
+    var currentLocInfo = Array<Double>() // This array will store lat and long for the name selected
+    var nameText: String?
+    var unitText: String?
     let cdManager = CoreDataManager.shared
     
     @IBOutlet weak var location: UITextField!
@@ -42,7 +45,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         units.text = unitTextField
-        location.text = currentLoc
+        location.text = currentLocName
+        name.text = nameText ?? ""
+        
+        
+        
         
         // TEST
         
@@ -93,10 +100,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func saveUserInfo(_ sender: UIButton) {
         print("\(name.text ?? "") and \(units.text ?? "")")
+        
+        let placeEntity = cdManager.createEntity(for: "Places", in: cdManager.managedObjectContext)
+        let place = Places(entity: placeEntity!, insertInto: cdManager.managedObjectContext)
+        place.latitude = currentLocInfo[0]
+        place.longitude = currentLocInfo[1]
+        
+        
         let userEntity = NSEntityDescription.entity(forEntityName: "User", in: cdManager.managedObjectContext)
-        let user = NSManagedObject(entity: userEntity!, insertInto: cdManager.managedObjectContext)
-        user.setValue(name.text, forKey: "firstName")
-        user.setValue(unitTextField, forKey: "defaultUnits")
+        let user = User(entity: userEntity!, insertInto: cdManager.managedObjectContext)
+        user.firstName = name.text
+        user.defaultUnits = unitTextField
+        user.addToUserToPlace(place)
+
+        place.placeToUser = user
+        
+        print(place.placeToUser)
+        print(user.userToPlace)
+        
         print(cdManager.managedObjectContext)
         cdManager.saveData()
         print("data saved")

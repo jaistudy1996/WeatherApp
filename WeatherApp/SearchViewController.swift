@@ -16,6 +16,8 @@ class SearchView: UIViewController {
     // MARK: - Default properties
     // TODO: - UPDATE LOC FROM CORELOCATION
     private var currentLoc = "TEST"
+    private var currentLocLongitude = 0.0
+    private var currentLocLatitude = 0.0
     
     let cdManager = CoreDataManager.shared
     
@@ -49,7 +51,8 @@ extension SearchView {
         if segue.identifier == "placeSelected" {
             print("SEGUE: placeSelected.    TYPE: prepare")
             let destVC = segue.destination as! ViewController
-            destVC.currentLoc = currentLoc
+            destVC.currentLocName = currentLoc
+            destVC.currentLocInfo = [self.currentLocLatitude, self.currentLocLongitude]
         }
     }
 }
@@ -93,22 +96,37 @@ extension SearchView: UITableViewDelegate {
             
             print("========== currentLOC Test End =======")
             
-            print(response?.mapItems[0].placemark.coordinate.latitude)
-            print(response?.mapItems[0].placemark.coordinate.longitude)
+            print("\n\n")
             
-            // Entity information
-            let name = response?.mapItems[0].name
-            let longitude = response?.mapItems[0].placemark.coordinate.longitude
-            let latitude = response?.mapItems[0].placemark.coordinate.latitude
+            print("========== longitude test ========")
+            print("Before: \(self.currentLocLongitude)")
+            if let tempLongitude = response?.mapItems[0].placemark.coordinate.latitude {
+                self.currentLocLongitude = tempLongitude
+            } else {
+                self.currentLocLongitude = 0.0
+            }
+            print("After: \(self.currentLocLongitude)")
+            print("========== longitude test End ========")
+            
+            print("\n\n")
+            
+            print("========== latitude test ========")
+            print("Before: \(self.currentLocLatitude)")
+            if let tempLatitude = response?.mapItems[0].placemark.coordinate.longitude {
+                self.currentLocLongitude = tempLatitude
+            } else {
+                self.currentLocLatitude = 0.0
+            }
+            print("After: \(self.currentLocLatitude)")
+            print("========== latitude test End ========")
             
             // Selected Place entity
             let locEntity = NSEntityDescription.entity(forEntityName: "Places", in: self.cdManager.managedObjectContext)
             let locObject = NSManagedObject(entity: locEntity!, insertInto: self.cdManager.managedObjectContext)
-            locObject.setValue(name, forKey: "name")
-            locObject.setValue(longitude, forKey: "longitude")
-            locObject.setValue(latitude, forKey: "latitude")
+            locObject.setValue(self.currentLoc, forKey: "name")
+            locObject.setValue(self.currentLocLongitude, forKey: "longitude")
+            locObject.setValue(self.currentLocLatitude, forKey: "latitude")
             
-            self.cdManager.saveData()
             self.performSegue(withIdentifier: "placeSelected", sender: self)
         }
         
